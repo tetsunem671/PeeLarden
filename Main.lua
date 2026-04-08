@@ -61,10 +61,10 @@ end
 --============================--
 local STATE = loadModule("https://raw.githubusercontent.com/tetsunem671/PeeLarden/main/Others/State.lua")
 local UI = loadModule("https://raw.githubusercontent.com/tetsunem671/PeeLarden/main/Others/RayfieldUI.lua")
-loadModule("https://raw.githubusercontent.com/tetsunem671/PeeLarden/main/Others/Logics/EggBuyer.lua") -- auto-run, no Init
 local Events = loadModule("https://raw.githubusercontent.com/tetsunem671/PeeLarden/main/Others/Logics/Events.lua")
 
 getgenv().STATE = STATE
+loadModule("https://raw.githubusercontent.com/tetsunem671/PeeLarden/main/Others/Logics/EggBuyer.lua") -- auto-run, no Init
 
 print("Modules loaded ✅")
 
