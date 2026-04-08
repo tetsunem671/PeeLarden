@@ -44,6 +44,37 @@ local function getNearest(config)
     return nearest
 end
 
+
+local function getNearest2(config)
+    local character = player.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then return nil end
+    local hrp = character.HumanoidRootPart
+
+    local nearest
+    local shortestDistance = math.huge
+
+    local arcadeTickets = workspace.Events:FindFirstChild("ArcadeTickets")
+    if not arcadeTickets then
+        return
+    end
+
+    for _, obj in pairs(arcadeTickets:GetChildren()) do
+        local prompt = obj:FindFirstChildWhichIsA("ProximityPrompt")
+        if prompt then
+            local target = prompt.Parent
+            if target then
+                local dist = (hrp.Position - target.Position).Magnitude
+                if dist < shortestDistance then
+                    shortestDistance = dist
+                    nearest = target
+                end
+            end
+        end
+    end
+
+    return nearest
+end
+
 -- Smooth follow
 local currentConnection
 local function stick(targetHRP, config)
@@ -166,6 +197,21 @@ local function runCollector(name, config, stateKey)
                         end
                         task.wait(0.2)
                         triggerPrompt(prompt)
+                    end
+                end
+
+                
+                if name == "Arcade" then
+                    local target, prompt = getNearest2(config)
+                    if target then
+                        tweenTo(character, target.Position, config.TweenSpeed or DEFAULTS.TweenSpeed)
+                        if prompt then
+                            if config.HoldOverride ~= nil then
+                                prompt.HoldDuration = config.HoldOverride
+                            end
+                            task.wait(0.2)
+                            triggerPrompt(prompt)
+                        end
                     end
                 end
 
