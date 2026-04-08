@@ -85,6 +85,22 @@ local function attack(targetHRP, config)
     end)
 end
 
+local function tweenTo(character, targetPos, speed)
+    local hrp = character:WaitForChild("HumanoidRootPart")
+
+    local distance = (hrp.Position - targetPos).Magnitude
+    local time = distance / speed
+
+    local tween = TweenService:Create(
+        hrp,
+        TweenInfo.new(time, Enum.EasingStyle.Linear),
+        { CFrame = CFrame.new(targetPos) }
+    )
+
+    tween:Play()
+    tween.Completed:Wait()
+end
+
 local function findObjects(config)
     local results = {}
     local source

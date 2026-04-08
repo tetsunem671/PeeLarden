@@ -17,7 +17,7 @@ local function hasSelectedMutation(eggModifiers)
     end
     for mut in eggModifiers:gmatch("([^,]+)") do
         mut = mut:match("^%s*(.-)%s*$")
-        if table.find(STATE.SelectedMutations, mut) then
+        if table.find(getgenv().STATE.SelectedMutations, mut) then
             return true
         end
     end
@@ -41,15 +41,15 @@ task.spawn(function()
                     local canBuy = false
 
                     -- WITH MUTATION
-                    if STATE.AutoBuyMutation 
-                    and table.find(STATE.SelectedEggsWithMutation, eggName)
+                    if getgenv().STATE.AutoBuyMutation 
+                    and table.find(getgenv().STATE.SelectedEggsWithMutation, eggName)
                     and hasSelectedMutation(eggModifiers) then
                         canBuy = true
                     end
 
                     -- NO MUTATION
-                    if STATE.AutoBuyNoMutation 
-                    and table.find(STATE.SelectedEggsNoMutation, eggName)
+                    if getgenv().STATE.AutoBuyNoMutation 
+                    and table.find(getgenv().STATE.SelectedEggsNoMutation, eggName)
                     and isNoMutation(eggModifiers) then
                         canBuy = true
                     end
