@@ -19,13 +19,13 @@ local STATE = {
     SelectedEggsNoMutation = CONFIG.EggCurrentOptions_NoMutation or {},
 
     SelectedMutations = CONFIG.MutationCurrentOptions or {},
-    AllMutations = CONFIG.AllMutations
+    AllMutations = CONFIG.AllMutations,
     -- Events
     AutoEaster = CONFIG.AutoEaster or false,
     AutoGhost = CONFIG.AutoGhost or false,
     AutoArcade = CONFIG.AutoArcade or false,
     AutoMeteoron = CONFIG.AutoMeteoron or false,
-    AutoSnowflake = CONFIG.AutoSnowflake or false
+    AutoSnowflake = CONFIG.AutoSnowflake or false,
     
     Init = function()
         --// Extract Eggs
