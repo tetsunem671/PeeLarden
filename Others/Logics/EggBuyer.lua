@@ -60,6 +60,7 @@ task.spawn(function()
                             prompt:SetAttribute("TriggeredByScript", true)
 
                             task.spawn(function()
+                                prompt.MaxActivationDistance = 250
                                 prompt:InputHoldBegin()
                                 task.wait(0.5)
                                 prompt:InputHoldEnd()
