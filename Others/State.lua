@@ -3,11 +3,13 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 
+print("67")
 --// Modules
 local SharedEggs = require(ReplicatedStorage.Modules.Gameplay.Shared_Eggs)
 local SharedModifiers = require(ReplicatedStorage.Modules.Gameplay.Shared_Modifiers)
 
 local CONFIG = getgenv().CONFIG or {}
+print("67")
 
 local STATE = {
     AutoBuyMutation = CONFIG.AutoBuyMutation or false,

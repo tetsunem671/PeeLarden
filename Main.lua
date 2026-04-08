@@ -1,5 +1,7 @@
 -- Shared state
 print("67")
+getgenv().CONFIG = getgenv().CONFIG
+
 getgenv().STATE = loadstring(game:HttpGet("https://raw.githubusercontent.com/tetsunem671/PeeLarden/refs/heads/main/Others/State.lua"))()
 
 print("67")
