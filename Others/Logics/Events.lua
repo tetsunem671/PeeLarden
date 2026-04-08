@@ -7,7 +7,7 @@ local player = Players.LocalPlayer
 
 -- DEFAULTS
 local DEFAULTS = {
-    TweenSpeed = 80,
+    TweenSpeed = 50,
     Interval = 1,
     HoldOverride = 0,
     LerpAlpha = 0.35,
@@ -16,6 +16,74 @@ local DEFAULTS = {
 
 local Events = {}
 local running = {}
+
+-- Get nearest ghost according to your Filter
+local function getNearest(config)
+    local character = player.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then return nil end
+    local hrp = character.HumanoidRootPart
+
+    local nearest
+    local shortestDistance = math.huge
+
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj:IsA("Model") and config.Filter(obj) then
+            local ghostHRP = obj:FindFirstChild("HumanoidRootPart") 
+                or obj:FindFirstChild("Torso") 
+                or obj.PrimaryPart
+            if ghostHRP then
+                local dist = (hrp.Position - ghostHRP.Position).Magnitude
+                if dist < shortestDistance then
+                    shortestDistance = dist
+                    nearest = ghostHRP
+                end
+            end
+        end
+    end
+
+    return nearest
+end
+
+-- Smooth follow
+local currentConnection
+local function stick(targetHRP, config)
+    local character = player.Character
+    if not character then return end
+    local hrp = character:WaitForChild("HumanoidRootPart")
+
+    if currentConnection then
+        currentConnection:Disconnect()
+    end
+
+    currentConnection = RunService.Heartbeat:Connect(function()
+        if not targetHRP or not targetHRP.Parent then
+            currentConnection:Disconnect()
+            currentConnection = nil
+            return
+        end
+
+        local offset = CFrame.new(0, 0, 3)
+        hrp.CFrame = hrp.CFrame:Lerp(targetHRP.CFrame * offset, config.LerpAlpha or 0.35)
+        hrp.Velocity = Vector3.zero
+        hrp.RotVelocity = Vector3.zero
+    end)
+end
+
+-- Non-blocking attack
+local attacking = false
+local function attack(targetHRP, config)
+    if attacking then return end
+    attacking = true
+
+    task.spawn(function()
+        while targetHRP and targetHRP.Parent do
+            VirtualInputManager:SendMouseButtonEvent(0,0,0,true,game,0)
+            VirtualInputManager:SendMouseButtonEvent(0,0,0,false,game,0)
+            task.wait(config.AttackInterval or 0.2)
+        end
+        attacking = false
+    end)
+end
 
 local function findObjects(config)
     local results = {}
@@ -158,7 +226,7 @@ function Events.Init()
     -- Ghost
     runTracker("Ghost", {
         Filter = function(obj)
-            return obj.Name:match("^(FastGhost|NormalGhost|SlowGhost)")
+            return obj.Name:match("^(FastGhost_%d+|NormalGhost_%d+|SlowGhost_%d+)")
         end,
         LerpAlpha = 0.35,
         AttackInterval = 0.2,
