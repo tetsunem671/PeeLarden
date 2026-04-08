@@ -17,6 +17,41 @@ local DEFAULTS = {
 local Events = {}
 local running = {}
 
+local function findObjects(config)
+    local results = {}
+    local source
+
+    -- If folder already exists, use it
+    if config.Folder then
+        source = config.Folder
+    else
+        -- Special handling for Arcade
+        if config.Name == "ArcadeOrb" then
+            source = workspace.Events:FindFirstChild("ArcadeSpheres")
+            if not source then
+                -- Folder doesn't exist yet, return empty table
+                return results
+            end
+        else
+            source = workspace
+        end
+    end
+
+    for _, obj in ipairs(source:GetDescendants()) do
+        if config.Mode == "Name" and obj.Name == config.Name then
+            table.insert(results, obj)
+
+        elseif config.Mode == "Pattern" and obj.Name:match(config.Pattern) then
+            table.insert(results, obj)
+
+        elseif config.Mode == "Folder" then
+            table.insert(results, obj)
+        end
+    end
+
+    return results
+end
+
 local function runCollector(name, config, stateKey)
     running[name] = false
 
@@ -112,7 +147,6 @@ function Events.Init()
 
     -- Arcade
     runCollector("Arcade", {
-        Source = workspace:WaitForChild("Events"):WaitForChild("ArcadeSpheres"),
         Mode = "Name",
         Name = "ArcadeOrb",
         UsePrompt = false,
